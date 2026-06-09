@@ -1,0 +1,14 @@
+{
+  "name": "test-env",
+  "version": "1.0.0",
+  "description": "Test environment for AgenticDevOps planner",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
