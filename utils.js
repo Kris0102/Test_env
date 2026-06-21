@@ -13,4 +13,28 @@ function formatTemperature(value, unit) {
   return Math.round(value * 10) / 10;
 }
 
-module.exports = { formatTemperature };
+/**
+ * Convert Celsius to Fahrenheit.
+ * @param {number} celsius
+ * @returns {number}
+ */
+function celsiusToFahrenheit(celsius) {
+  if (typeof celsius !== "number") {
+    throw new TypeError(`Expected number, got ${typeof celsius}`);
+  }
+  return (celsius * 9 / 5) + 32;
+}
+
+/**
+ * Summarize an array of temperature values.
+ * @param {number[]} values
+ * @returns {{ min: number, max: number, avg: number }}
+ */
+function summarizeTemperatures(values) {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const avg = formatTemperature(values.reduce((a, b) => a + b, 0) / values.length, "C");
+  return { min, max, avg };
+}
+
+module.exports = { formatTemperature, celsiusToFahrenheit, summarizeTemperatures };
