@@ -1,6 +1,6 @@
 "use strict";
 
-const { formatTemperature } = require("./utils");
+const { formatTemperature, celsiusToFahrenheit } = require("./utils");
 
 /**
  * @typedef {Object} WeatherData
@@ -19,19 +19,28 @@ const WEATHER_DB = {
 /**
  * Retrieve current weather for a city.
  * @param {string} city
+ * @param {string} unit - "C" or "F", defaults to "C"
  * @returns {WeatherData}
  * @throws {Error} if city is not found
  */
-function getWeather(city) {
+function getWeather(city, unit = "C") {
   const data = WEATHER_DB[city];
   if (!data) {
     throw new Error(`Unknown city: ${city}`);
   }
+  
+  let temperature;
+  if (unit === "F") {
+    temperature = formatTemperature(celsiusToFahrenheit(data.temperature), "F");
+  } else {
+    temperature = formatTemperature(data.temperature, "C");
+  }
+  
   return {
     city,
-    temperature: formatTemperature(data.temperature, "C"),
+    temperature,
     condition: data.condition,
-    unit: "C",
+    unit,
   };
 }
 
