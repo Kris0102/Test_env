@@ -1,6 +1,6 @@
 "use strict";
 
-const { formatTemperature } = require("./utils");
+const { formatTemperature, compareTemperatures } = require("./utils");
 
 /**
  * @typedef {Object} WeatherData
@@ -35,4 +35,44 @@ function getWeather(city) {
   };
 }
 
-module.exports = { getWeather };
+/**
+ * Compare temperatures of two cities.
+ * @param {string} cityA
+ * @param {string} cityB
+ * @returns {{warmer: string|null, cooler: string|null, difference: string|number, tie: boolean}}
+ * @throws {Error} if either city is not found
+ */
+function compareCities(cityA, cityB) {
+  if (!WEATHER_DB[cityA]) {
+    throw new Error(`Unknown city: ${cityA}`);
+  }
+  if (!WEATHER_DB[cityB]) {
+    throw new Error(`Unknown city: ${cityB}`);
+  }
+
+  const tempA = WEATHER_DB[cityA].temperature;
+  const tempB = WEATHER_DB[cityB].temperature;
+  const comparison = compareTemperatures(tempA, tempB);
+
+  if (comparison === 0) {
+    return {
+      warmer: null,
+      cooler: null,
+      difference: 0,
+      tie: true,
+    };
+  }
+
+  const warmer = comparison === 1 ? cityA : cityB;
+  const cooler = comparison === 1 ? cityB : cityA;
+  const difference = formatTemperature(Math.abs(tempA - tempB), "C");
+
+  return {
+    warmer,
+    cooler,
+    difference,
+    tie: false,
+  };
+}
+
+module.exports = { getWeather, compareCities };
