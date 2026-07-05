@@ -1,0 +1,16 @@
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.keystore
+id_rsa*
+.npmrc
+.agentic_tests/
