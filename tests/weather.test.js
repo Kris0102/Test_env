@@ -20,6 +20,32 @@ describe("levenshteinDistance", () => {
     expect(() => levenshteinDistance(null, "abc")).toThrow(TypeError);
     expect(() => levenshteinDistance("abc", 123)).toThrow(TypeError);
   });
+
+  test("calculates distance between empty strings as 0", () => {
+    expect(levenshteinDistance("", "")).toBe(0);
+  });
+
+  test("calculates distance between strings with spaces", () => {
+    expect(levenshteinDistance("hello world", "hello")).toBe(6);
+  });
+
+  test("calculates distance for case-sensitive strings", () => {
+    expect(levenshteinDistance("Berlin", "berlin")).toBe(1);
+  });
+
+  test("demonstrates symmetry of distance calculation", () => {
+    expect(levenshteinDistance("kitten", "sitting")).toBe(
+      levenshteinDistance("sitting", "kitten")
+    );
+  });
+
+  test("calculates distance for transposed characters", () => {
+    expect(levenshteinDistance("ab", "ba")).toBe(2);
+  });
+
+  test("calculates distance for substring matches", () => {
+    expect(levenshteinDistance("cat", "catalog")).toBe(4);
+  });
 });
 
 describe("findCity", () => {
