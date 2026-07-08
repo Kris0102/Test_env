@@ -14,6 +14,19 @@ function formatTemperature(value, unit) {
 }
 
 /**
+ * Convert Celsius to Fahrenheit.
+ * @param {number} celsius
+ * @returns {number}
+ * @throws {TypeError} If the input is not a number.
+ */
+function celsiusToFahrenheit(celsius) {
+  if (typeof celsius !== "number") {
+    throw new TypeError(`Expected number, got ${typeof celsius}`);
+  }
+  return (celsius * 9) / 5 + 32;
+}
+
+/**
  * Calculate the Levenshtein distance between two strings.
  * @param {string} a
  * @param {string} b
@@ -50,4 +63,4 @@ function levenshteinDistance(a, b) {
   return matrix[n][m];
 }
 
-module.exports = { formatTemperature, levenshteinDistance };
+module.exports = { formatTemperature, celsiusToFahrenheit, levenshteinDistance };
