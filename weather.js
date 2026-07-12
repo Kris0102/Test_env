@@ -47,22 +47,26 @@ function findCity(query) {
 
   // 3. Fuzzy match and Suggestion tracking
   let minDistance = Infinity;
-  let closestCity = null;
+  let tiedCities = [];
 
   for (const city of cities) {
     const distance = levenshteinDistance(lowerQuery, city.toLowerCase());
     if (distance < minDistance) {
       minDistance = distance;
-      closestCity = city;
+      tiedCities = [city];
+    } else if (distance === minDistance) {
+      tiedCities.push(city);
     }
   }
 
+  const sortedTiedCities = tiedCities.slice().sort();
+
   if (minDistance <= 2) {
-    return { city: closestCity, corrected: true };
+    return { city: sortedTiedCities[0], corrected: true };
   }
 
   if (minDistance <= 3) {
-    throw new Error(`Unknown city: ${query}. Did you mean ${closestCity}?`);
+    throw new Error(`Unknown city: ${query}. Did you mean ${sortedTiedCities.join(" or ")}?`);
   }
 
   throw new Error(`Unknown city: ${query}`);
@@ -71,18 +75,19 @@ function findCity(query) {
 /**
  * Retrieve current weather for a city.
  * @param {string} city
+ * @param {string} [unit="C"] - "C" or "F"
  * @returns {WeatherData}
  * @throws {Error} if city is not found
  */
-function getWeather(city) {
+function getWeather(city, unit = "C") {
   const { city: canonicalCity, corrected } = findCity(city);
   const data = WEATHER_DB[canonicalCity];
 
   return {
     city: canonicalCity,
-    temperature: data.temperature,
+    temperature: formatTemperature(data.temperature, unit),
     condition: data.condition,
-    unit: "C",
+    unit,
     corrected: corrected,
   };
 }

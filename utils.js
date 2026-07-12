@@ -1,16 +1,28 @@
 "use strict";
 
 /**
- * Round a temperature value to one decimal place.
- * @param {number} value
+ * Round a temperature value to one decimal place, converting units as needed.
+ * @param {number} value - Temperature in Celsius.
  * @param {string} unit - "C" or "F"
  * @returns {number}
+ * @throws {TypeError} If value is not a number.
+ * @throws {Error} If unit is not "C" or "F".
  */
 function formatTemperature(value, unit) {
   if (typeof value !== "number") {
     throw new TypeError(`Expected number, got ${typeof value}`);
   }
-  return Math.round(value * 10) / 10;
+
+  if (unit === "C") {
+    return Math.round(value * 10) / 10;
+  }
+
+  if (unit === "F") {
+    const fahrenheit = (value * 9) / 5 + 32;
+    return Math.round(fahrenheit * 10) / 10;
+  }
+
+  throw new Error(`Unsupported unit: ${unit}`);
 }
 
 /**
