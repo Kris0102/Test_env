@@ -1,6 +1,6 @@
 "use strict";
 
-const { formatTemperature, levenshteinDistance } = require("./utils");
+const { formatTemperature, levenshteinDistance, celsiusToFahrenheit } = require("./utils");
 
 /**
  * @typedef {Object} WeatherData
@@ -71,18 +71,29 @@ function findCity(query) {
 /**
  * Retrieve current weather for a city.
  * @param {string} city
+ * @param {string} [unit='C'] - The temperature unit to return ('C' or 'F')
  * @returns {WeatherData}
  * @throws {Error} if city is not found
  */
-function getWeather(city) {
+function getWeather(city, unit = 'C') {
   const { city: canonicalCity, corrected } = findCity(city);
   const data = WEATHER_DB[canonicalCity];
 
+  let temperature = data.temperature;
+  let returnedUnit = unit;
+
+  if (unit === 'F') {
+    temperature = celsiusToFahrenheit(data.temperature);
+    returnedUnit = 'F';
+  } else {
+    returnedUnit = 'C';
+  }
+
   return {
     city: canonicalCity,
-    temperature: data.temperature,
+    temperature: temperature,
     condition: data.condition,
-    unit: "C",
+    unit: returnedUnit,
     corrected: corrected,
   };
 }
